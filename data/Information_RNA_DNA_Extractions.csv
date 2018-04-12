@@ -1,0 +1,18 @@
+Sample,Sample Name,Age,Date of birth,Yeart of death,Date of death/Collection date,Hours postmortem,Date shipped,Site,Sex ,Precaution,Cause of death/conditions affecting tissues,,"Preprocessing batch (2 batches, same as RNA/DNA Extraction Batch)",RNA/DNA Extraction Batch (2 batches),Library prep batch (1),Sequencing Lane,Sequencing Barcode
+389,Rogger,35,1/1/69,2014,1/17/14,0.00,1/22/14,Yerkes,M,none,"2. Pleuritis, Severe, Multifocal to Diffuse3. Peritonitis, Multifocal4. Pyelonephritis, Severe, Bilateral5. Osteoarthritis, Severe, Right and Left Knee, Right Hip Joint",,,,,,
+503,Carmichael,29,3/21/83,2010,9/29/10,0.00,11/9/10,Yerkes,M,none,"unable to recover from anesthesia,            seizures)2. Focal renal cyst, white renal streaks",,,,,,
+554,Anja,34,1/9/80,2015,2/3/15,1.00,2/11/15,Yerkes,F,none,"Hydropericardium, Mild3. Vegetative Endocarditis4. Nephritis, Bilateral, Severe5. Probable Cerebral infarct Left Parietal 6. Cardiomyopathy hypertrophy, Left ventricle",,,,,,
+676,Callie,22,2/18/91,2014,2/18/14,2.00,11/19/14,Yerkes,F,none,"2. Severe multifocal to diffuse purulent hepatitis3. Multifocal peritonitis4. Multifocal pericarditis5. Chronic, multifocal pleuritis6. Multifocal oral mucosal ulcerations7. Bilateral chronic nephritis",,,,,,
+724,Kerri,15,1/2/95,2010,9/28/10,0.00,9/28/10,Yerkes,F,none,"(diabetes, unresponsive)2. Liver, submandibular lymph node, abscesses3. Pyometra4. Cloudy meninges (meningitis) and atrophied cerebrum",,,,,,
+529,Justin,25,unknown,unknown,unknown,unknown,unknown,Yerkes,M,none,,,,,,,
+4x0354,NA,21,6/25/90,2011,12/22/11,0.00,unknown,Texas Biomedical,M,HCV+,"congestive heart failure, euthanized",,,,,,
+4x0212,NA,32,6/7/81,2013,10/28/13,unknown,3/3/14,Texas Biomedical,F,HCV+,,,,,,,
+4X0267,NA,29,10/30/84,2013,8/1/13,unknown,3/3/14,Texas Biomedical,F,HCV+,,,,,,,
+4X0333,NA,24,1/5/89,2013,8/30/13,unknown,3/3/14,Texas Biomedical,F,"HCV exposure, HBV+",,,,,,,
+4X0339,NA,24,7/21/89,2013,6/4/13,unknown,3/3/14,Texas Biomedical,M,HBV+,,,,,,,
+4X0357,NA,25,7/21/89,2014,1/27/14,unknown,3/3/14,Texas Biomedical,F,"HIV exposure, tested neg.",,,,,,,
+4X0550,NA,28,1/30/85,2013,10/24/13,unknown,3/3/14,Texas Biomedical,M,HCV+,,,,,,,
+537,Socrates,26,1/23/87,2013,11/29/13,6.00,unknown,Yerkes,M,none,"Severe multicardial fibrosis and cardiomegaly Heart, Ascites, Liver, 2. Heart, severe multifocal myocardial fibrosis (cardiomegaly)3. Liver, severe chronic passive congestion 4. Ascites",,,,,,
+558,Cynthia,33,6/7/80,2013,3/28/13,2.00,unknown,Yerkes,F,none,"Severe diffuse embolic pneumonia3. Hypertrophic cardiomyopathy4. Severe chronic passive hepatic congestion5. Uterine leiomyoma/leiomyosarcoma6. Pericardial effusion7. Peritoneal effusion",,,,,,
+495,Amos,unknown,unknown,unknown,unknown,unknown,unknown,Yerkes,M,none,,,,,,,
+Little_R,Little Rock Chimp,unknown,unknown,unknown,unknown,unknown,unknown,Little Rock Zoo,unknown,none,,,,,,,

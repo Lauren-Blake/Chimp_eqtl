@@ -1,0 +1,264 @@
+---
+title: "Assigning batches"
+author: "Lauren Blake"
+date: 2018-04-11
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- The file analysis/chunks.R contains chunks that define default settings
+shared across the workflowr files. -->
+```{r read-chunk, include=FALSE, cache=FALSE}
+knitr::read_chunk("chunks.R")
+```
+
+<!-- Update knitr chunk options -->
+```{r knitr-opts-chunk, include=FALSE}
+```
+
+<!-- Insert the date the file was last updated -->
+```{r last-updated, echo=FALSE, results='asis'}
+```
+
+<!-- Insert the code version (Git commit SHA1) if Git repository exists and R
+ package git2r is installed -->
+```{r code-version, echo=FALSE, results='asis'}
+```
+
+# Introduction
+
+The goal of this analysis is to assign batches to the second round of tissues. 
+
+# Import the data/libraries
+
+```{r}
+# Load data
+chimp_info <- read.csv("../data/Information_RNA_DNA_Extractions.csv", header = T, stringsAsFactors = FALSE)
+chimp_info <- chimp_info[,1:11]
+dim(chimp_info)
+head(chimp_info)
+
+# Load libraries
+
+library(ggplot2)
+library(cowplot)
+library(rsample)
+```
+
+# Summarize data
+
+```{r}
+summary(chimp_info)
+
+#chimp_info$Age <- as.numeric(chimp_info$Age)
+#chimp_info$Age[is.na(chimp_info$Age)] <- "Unknown"
+#chimp_info$Yeart.of.death <- as.numeric(chimp_info$Yeart.of.death)
+#chimp_info$Hours.postmortem <- as.numeric(chimp_info$Hours.postmortem)
+
+age_plot <- ggplot(chimp_info, aes(x = Age)) +geom_bar() + ylab("Number of chimps")+ggtitle("Age of chimps")
+
+plot_grid(age_plot)
+
+birth_plot <- ggplot(chimp_info, aes(x = Yeart.of.death)) +geom_bar() + xlab("Year of death") + ylab("Number of chimps")+ggtitle("Year of death (proxy for length of tissue storage)")
+
+plot_grid(birth_plot)
+
+postmortem_plot <- ggplot(chimp_info, aes(x = Hours.postmortem)) +geom_bar() + xlab("Postmortem tissue collection (hours)") + ylab("Number of chimps")+ggtitle("When tissues were collected postmortem")
+
+plot_grid(postmortem_plot)
+
+location_plot <- ggplot(chimp_info, aes(x = Site)) +geom_bar() + xlab("Location of chimps") + ylab("Number of chimps")+ggtitle("Site location")
+
+plot_grid(location_plot)
+
+sex_plot <- ggplot(chimp_info, aes(x = Sex)) +geom_bar() + xlab("Sex") + ylab("Number of chimps")+ggtitle("Sex")
+
+plot_grid(sex_plot)
+
+disease_plot <- ggplot(chimp_info, aes(x = Precaution)) +geom_bar() + xlab("Disease status") + ylab("Number of chimps")+ggtitle("Disease status")
+
+plot_grid(disease_plot)
+```
+
+# Divide into 2 batches
+
+```{r}
+chimp_info$ID <- seq.int(nrow(chimp_info))
+
+set.seed(1234)
+
+## 50% of the sample size
+smp_size <- floor(0.50 * nrow(chimp_info))
+
+make_batches <- sample(seq_len(nrow(chimp_info)), size = smp_size)
+
+chimp_info$ID <- chimp_info$ID %in% make_batches
+
+chimp_info$ID[chimp_info$ID == "TRUE"] <- "1"
+chimp_info$ID[chimp_info$ID == "FALSE"] <- "2"
+
+age_plot <- ggplot(chimp_info, aes(x = Age)) + facet_wrap(~chimp_info$ID) + geom_bar() + ylab("Number of chimps")+ggtitle("Age of chimps")
+
+plot_grid(age_plot)
+
+birth_plot <- ggplot(chimp_info, aes(x = Yeart.of.death))  + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Year of death") +  ylab("Number of chimps")+ggtitle("Year of death (proxy for length of tissue storage)")
+
+plot_grid(birth_plot)
+
+postmortem_plot <- ggplot(chimp_info, aes(x = Hours.postmortem)) + facet_wrap(~chimp_info$ID)  +geom_bar() + xlab("Postmortem tissue collection (hours)") + ylab("Number of chimps")+ggtitle("When tissues were collected postmortem")
+
+plot_grid(postmortem_plot)
+
+location_plot <- ggplot(chimp_info, aes(x = Site)) + facet_wrap(~chimp_info$ID)+geom_bar() + xlab("Location of chimps") + ylab("Number of chimps")+ggtitle("Site location")
+
+plot_grid(location_plot)
+
+sex_plot <- ggplot(chimp_info, aes(x = Sex)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Disease status") + ylab("Number of chimps")+ggtitle("Disease status")
+
+plot_grid(sex_plot)
+
+disease_plot <- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Disease status") + ylab("Number of chimps")+ggtitle("Disease status")
+
+plot_grid(disease_plot)
+
+
+chimp_seeds <- array(NA, dim = c(6, 10))
+
+i = 1
+for (i in 1:ncol(chimp_seeds)){
+set.seed(i)
+chimp_info$ID <- seq.int(nrow(chimp_info))
+
+## 50% of the sample size
+smp_size <- floor(0.50 * nrow(chimp_info))
+
+make_batches <- sample(seq_len(nrow(chimp_info)), size = smp_size)
+
+chimp_info$ID <- chimp_info$ID %in% make_batches
+
+chimp_info$ID[chimp_info$ID == "TRUE"] <- "0"
+chimp_info$ID[chimp_info$ID == "FALSE"] <- "1"
+
+chimp_info$ID <- as.numeric(chimp_info$ID)
+
+#chimp_check <- c(3, 5, 7, 9, 10, 11, 12)
+#model <- glm(ID ~ Age,family=binomial(link='logit'),data=chimp_info)
+
+chimp_info$Yeart.of.death <- as.numeric(chimp_info$Yeart.of.death)
+chimp_info$Hours.postmortem <- as.numeric(chimp_info$Hours.postmortem)
+chimp_info$Age <- as.numeric(chimp_info$Age)
+
+Site <- as.numeric(as.factor(chimp_info$Site))
+Sex <- as.numeric(as.factor(chimp_info$Sex))
+
+chimp_info$Precaution[chimp_info$Precaution == "none"] <- 1
+chimp_info$Precaution[chimp_info$Precaution == "HCV+"] <- 2
+chimp_info$Precaution[chimp_info$Precaution == "HBV+"] <- 3
+chimp_info$Precaution[chimp_info$Precaution == "HCV exposure, HBV+"] <- 3
+chimp_info$Precaution[chimp_info$Precaution == "HIV exposure, tested neg."] <- 4
+
+
+Precaution <- as.numeric(chimp_info$Precaution)
+
+chimp_seeds[1,i] <- cor(Sex, chimp_info$ID, use="pairwise.complete.obs")
+chimp_seeds[2,i] <- cor(Precaution, chimp_info$ID, use="pairwise.complete.obs")
+chimp_seeds[3,i] <- cor(Site, chimp_info$ID, use="pairwise.complete.obs")
+chimp_seeds[4,i] <- cor(chimp_info$Age, chimp_info$ID, use="pairwise.complete.obs")
+chimp_seeds[5,i] <- cor(chimp_info$Yeart.of.death, chimp_info$ID, use="pairwise.complete.obs")
+chimp_seeds[6,i] <- cor(chimp_info$Hours.postmortem, chimp_info$ID, use="pairwise.complete.obs")
+
+}
+
+set.seed(4)
+
+chimp_info <- read.csv("../data/Information_RNA_DNA_Extractions.csv", header = T, stringsAsFactors = FALSE)
+chimp_info <- chimp_info[,1:11]
+
+
+chimp_info$ID <- seq.int(nrow(chimp_info))
+
+## 50% of the sample size
+smp_size <- floor(0.50 * nrow(chimp_info))
+
+make_batches <- sample(seq_len(nrow(chimp_info)), size = smp_size)
+
+chimp_info$ID <- chimp_info$ID %in% make_batches
+
+chimp_info$ID[chimp_info$ID == "TRUE"] <- "1"
+chimp_info$ID[chimp_info$ID == "FALSE"] <- "2"
+
+age_plot <- ggplot(chimp_info, aes(x = Age)) + facet_wrap(~chimp_info$ID) + geom_bar() + ylab("Number of chimps")+ggtitle("Age of chimps")
+
+plot_grid(age_plot)
+
+birth_plot <- ggplot(chimp_info, aes(x = Yeart.of.death))  + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Year of death") +  ylab("Number of chimps")+ggtitle("Year of death (proxy for length of tissue storage)")
+
+plot_grid(birth_plot)
+
+postmortem_plot <- ggplot(chimp_info, aes(x = Hours.postmortem)) + facet_wrap(~chimp_info$ID)  +geom_bar() + xlab("Postmortem tissue collection (hours)") + ylab("Number of chimps")+ggtitle("When tissues were collected postmortem")
+
+plot_grid(postmortem_plot)
+
+location_plot <- ggplot(chimp_info, aes(x = Site)) + facet_wrap(~chimp_info$ID)+geom_bar() + xlab("Location of chimps") + ylab("Number of chimps")+ggtitle("Site location")
+
+plot_grid(location_plot)
+
+sex_plot <- ggplot(chimp_info, aes(x = Sex)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Disease status") + ylab("Number of chimps")+ggtitle("Disease status")
+
+plot_grid(sex_plot)
+
+disease_plot <- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Disease status") + ylab("Number of chimps")+ggtitle("Disease status") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(disease_plot)
+
+```
+
+# Visualize the two batches
+
+```{r}
+# Manually change sample 13 from batch 2 to 1 (to spread out the HCV+)
+
+chimp_info$ID[13] <- "1"
+
+# Manually change sample 9 from batch 1 to 2 (to spread out the HBV+)
+
+chimp_info$ID[11] <- "2"
+
+# If insistent on sample # of males and females 
+chimp_info$ID[6] <- "1"
+chimp_info$ID[17] <- "1"
+
+age_plot <- ggplot(chimp_info, aes(x = Age)) + facet_wrap(~chimp_info$ID) + geom_bar() + ylab("Number of chimps")+ggtitle("Age of chimps")
+
+plot_grid(age_plot)
+
+birth_plot <- ggplot(chimp_info, aes(x = Yeart.of.death))  + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Year of death") +  ylab("Number of chimps")+ggtitle("Year of death (proxy for length of tissue storage)")
+
+plot_grid(birth_plot)
+
+postmortem_plot <- ggplot(chimp_info, aes(x = Hours.postmortem)) + facet_wrap(~chimp_info$ID)  +geom_bar() + xlab("Postmortem tissue collection (hours)") + ylab("Number of chimps")+ggtitle("When tissues were collected postmortem")
+
+plot_grid(postmortem_plot)
+
+location_plot <- ggplot(chimp_info, aes(x = Site)) + facet_wrap(~chimp_info$ID)+geom_bar() + xlab("Location of chimps") + ylab("Number of chimps")+ggtitle("Site location") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(location_plot)
+
+sex_plot <- ggplot(chimp_info, aes(x = Sex)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Sex") + ylab("Number of chimps")+ggtitle("Sex")
+
+plot_grid(sex_plot)
+
+disease_plot <- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab("Disease status") + ylab("Number of chimps")+ggtitle("Disease status") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(disease_plot)
+```
+
+
+
+
+## Session information
+
+<!-- Insert the session information into the document -->
+```{r session-info}
+```

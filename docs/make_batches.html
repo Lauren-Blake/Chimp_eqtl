@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Lauren Blake" />
+
+<meta name="date" content="2018-04-11" />
+
+<title>Assigning batches</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chimp_eqtl</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jdblischak/workflowr">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Assigning batches</h1>
+<h4 class="author"><em>Lauren Blake</em></h4>
+<h4 class="date"><em>2018-04-11</em></h4>
+
+</div>
+
+
+<!-- The file analysis/chunks.R contains chunks that define default settings
+shared across the workflowr files. -->
+<!-- Update knitr chunk options -->
+<!-- Insert the date the file was last updated -->
+<p><strong>Last updated:</strong> 2018-04-11</p>
+<!-- Insert the code version (Git commit SHA1) if Git repository exists and R
+ package git2r is installed -->
+<p><strong>Code version:</strong> 44553e0</p>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The goal of this analysis is to assign batches to the second round of tissues.</p>
+</div>
+<div id="import-the-datalibraries" class="section level1">
+<h1>Import the data/libraries</h1>
+<pre class="r"><code># Load data
+chimp_info &lt;- read.csv(&quot;../data/Information_RNA_DNA_Extractions.csv&quot;, header = T, stringsAsFactors = FALSE)
+chimp_info &lt;- chimp_info[,1:11]
+dim(chimp_info)</code></pre>
+<pre><code>[1] 17 11</code></pre>
+<pre class="r"><code>head(chimp_info)</code></pre>
+<pre><code>  Sample Sample.Name Age Date.of.birth Yeart.of.death
+1    389      Rogger  35        1/1/69           2014
+2    503  Carmichael  29       3/21/83           2010
+3    554        Anja  34        1/9/80           2015
+4    676      Callie  22       2/18/91           2014
+5    724       Kerri  15        1/2/95           2010
+6    529      Justin  25       unknown        unknown
+  Date.of.death.Collection.date Hours.postmortem Date.shipped   Site Sex
+1                       1/17/14             0.00      1/22/14 Yerkes   M
+2                       9/29/10             0.00      11/9/10 Yerkes   M
+3                        2/3/15             1.00      2/11/15 Yerkes   F
+4                       2/18/14             2.00     11/19/14 Yerkes   F
+5                       9/28/10             0.00      9/28/10 Yerkes   F
+6                       unknown          unknown      unknown Yerkes   M
+  Precaution
+1       none
+2       none
+3       none
+4       none
+5       none
+6       none</code></pre>
+<pre class="r"><code># Load libraries
+
+library(ggplot2)
+library(cowplot)</code></pre>
+<pre><code>
+Attaching package: &#39;cowplot&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:ggplot2&#39;:
+
+    ggsave</code></pre>
+<pre class="r"><code>library(rsample)</code></pre>
+<pre><code>Loading required package: broom</code></pre>
+<pre><code>Loading required package: tidyr</code></pre>
+<pre><code>
+Attaching package: &#39;rsample&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:tidyr&#39;:
+
+    fill</code></pre>
+</div>
+<div id="summarize-data" class="section level1">
+<h1>Summarize data</h1>
+<pre class="r"><code>summary(chimp_info)</code></pre>
+<pre><code>    Sample          Sample.Name            Age           
+ Length:17          Length:17          Length:17         
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+ Date.of.birth      Yeart.of.death     Date.of.death.Collection.date
+ Length:17          Length:17          Length:17                    
+ Class :character   Class :character   Class :character             
+ Mode  :character   Mode  :character   Mode  :character             
+ Hours.postmortem   Date.shipped           Site          
+ Length:17          Length:17          Length:17         
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+     Sex             Precaution       
+ Length:17          Length:17         
+ Class :character   Class :character  
+ Mode  :character   Mode  :character  </code></pre>
+<pre class="r"><code>#chimp_info$Age &lt;- as.numeric(chimp_info$Age)
+#chimp_info$Age[is.na(chimp_info$Age)] &lt;- &quot;Unknown&quot;
+#chimp_info$Yeart.of.death &lt;- as.numeric(chimp_info$Yeart.of.death)
+#chimp_info$Hours.postmortem &lt;- as.numeric(chimp_info$Hours.postmortem)
+
+age_plot &lt;- ggplot(chimp_info, aes(x = Age)) +geom_bar() + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Age of chimps&quot;)
+
+plot_grid(age_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>birth_plot &lt;- ggplot(chimp_info, aes(x = Yeart.of.death)) +geom_bar() + xlab(&quot;Year of death&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Year of death (proxy for length of tissue storage)&quot;)
+
+plot_grid(birth_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>postmortem_plot &lt;- ggplot(chimp_info, aes(x = Hours.postmortem)) +geom_bar() + xlab(&quot;Postmortem tissue collection (hours)&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;When tissues were collected postmortem&quot;)
+
+plot_grid(postmortem_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>location_plot &lt;- ggplot(chimp_info, aes(x = Site)) +geom_bar() + xlab(&quot;Location of chimps&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Site location&quot;)
+
+plot_grid(location_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sex_plot &lt;- ggplot(chimp_info, aes(x = Sex)) +geom_bar() + xlab(&quot;Sex&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Sex&quot;)
+
+plot_grid(sex_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-2-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>disease_plot &lt;- ggplot(chimp_info, aes(x = Precaution)) +geom_bar() + xlab(&quot;Disease status&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Disease status&quot;)
+
+plot_grid(disease_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-2-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="divide-into-2-batches" class="section level1">
+<h1>Divide into 2 batches</h1>
+<pre class="r"><code>chimp_info$ID &lt;- seq.int(nrow(chimp_info))
+
+set.seed(1234)
+
+## 50% of the sample size
+smp_size &lt;- floor(0.50 * nrow(chimp_info))
+
+make_batches &lt;- sample(seq_len(nrow(chimp_info)), size = smp_size)
+
+chimp_info$ID &lt;- chimp_info$ID %in% make_batches
+
+chimp_info$ID[chimp_info$ID == &quot;TRUE&quot;] &lt;- &quot;1&quot;
+chimp_info$ID[chimp_info$ID == &quot;FALSE&quot;] &lt;- &quot;2&quot;
+
+age_plot &lt;- ggplot(chimp_info, aes(x = Age)) + facet_wrap(~chimp_info$ID) + geom_bar() + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Age of chimps&quot;)
+
+plot_grid(age_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>birth_plot &lt;- ggplot(chimp_info, aes(x = Yeart.of.death))  + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Year of death&quot;) +  ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Year of death (proxy for length of tissue storage)&quot;)
+
+plot_grid(birth_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>postmortem_plot &lt;- ggplot(chimp_info, aes(x = Hours.postmortem)) + facet_wrap(~chimp_info$ID)  +geom_bar() + xlab(&quot;Postmortem tissue collection (hours)&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;When tissues were collected postmortem&quot;)
+
+plot_grid(postmortem_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>location_plot &lt;- ggplot(chimp_info, aes(x = Site)) + facet_wrap(~chimp_info$ID)+geom_bar() + xlab(&quot;Location of chimps&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Site location&quot;)
+
+plot_grid(location_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sex_plot &lt;- ggplot(chimp_info, aes(x = Sex)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Disease status&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Disease status&quot;)
+
+plot_grid(sex_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>disease_plot &lt;- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Disease status&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Disease status&quot;)
+
+plot_grid(disease_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>chimp_seeds &lt;- array(NA, dim = c(6, 10))
+
+i = 1
+for (i in 1:ncol(chimp_seeds)){
+set.seed(i)
+chimp_info$ID &lt;- seq.int(nrow(chimp_info))
+
+## 50% of the sample size
+smp_size &lt;- floor(0.50 * nrow(chimp_info))
+
+make_batches &lt;- sample(seq_len(nrow(chimp_info)), size = smp_size)
+
+chimp_info$ID &lt;- chimp_info$ID %in% make_batches
+
+chimp_info$ID[chimp_info$ID == &quot;TRUE&quot;] &lt;- &quot;0&quot;
+chimp_info$ID[chimp_info$ID == &quot;FALSE&quot;] &lt;- &quot;1&quot;
+
+chimp_info$ID &lt;- as.numeric(chimp_info$ID)
+
+#chimp_check &lt;- c(3, 5, 7, 9, 10, 11, 12)
+#model &lt;- glm(ID ~ Age,family=binomial(link=&#39;logit&#39;),data=chimp_info)
+
+chimp_info$Yeart.of.death &lt;- as.numeric(chimp_info$Yeart.of.death)
+chimp_info$Hours.postmortem &lt;- as.numeric(chimp_info$Hours.postmortem)
+chimp_info$Age &lt;- as.numeric(chimp_info$Age)
+
+Site &lt;- as.numeric(as.factor(chimp_info$Site))
+Sex &lt;- as.numeric(as.factor(chimp_info$Sex))
+
+chimp_info$Precaution[chimp_info$Precaution == &quot;none&quot;] &lt;- 1
+chimp_info$Precaution[chimp_info$Precaution == &quot;HCV+&quot;] &lt;- 2
+chimp_info$Precaution[chimp_info$Precaution == &quot;HBV+&quot;] &lt;- 3
+chimp_info$Precaution[chimp_info$Precaution == &quot;HCV exposure, HBV+&quot;] &lt;- 3
+chimp_info$Precaution[chimp_info$Precaution == &quot;HIV exposure, tested neg.&quot;] &lt;- 4
+
+
+Precaution &lt;- as.numeric(chimp_info$Precaution)
+
+chimp_seeds[1,i] &lt;- cor(Sex, chimp_info$ID, use=&quot;pairwise.complete.obs&quot;)
+chimp_seeds[2,i] &lt;- cor(Precaution, chimp_info$ID, use=&quot;pairwise.complete.obs&quot;)
+chimp_seeds[3,i] &lt;- cor(Site, chimp_info$ID, use=&quot;pairwise.complete.obs&quot;)
+chimp_seeds[4,i] &lt;- cor(chimp_info$Age, chimp_info$ID, use=&quot;pairwise.complete.obs&quot;)
+chimp_seeds[5,i] &lt;- cor(chimp_info$Yeart.of.death, chimp_info$ID, use=&quot;pairwise.complete.obs&quot;)
+chimp_seeds[6,i] &lt;- cor(chimp_info$Hours.postmortem, chimp_info$ID, use=&quot;pairwise.complete.obs&quot;)
+
+}</code></pre>
+<pre><code>Warning: NAs introduced by coercion
+
+Warning: NAs introduced by coercion
+
+Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>set.seed(4)
+
+chimp_info &lt;- read.csv(&quot;../data/Information_RNA_DNA_Extractions.csv&quot;, header = T, stringsAsFactors = FALSE)
+chimp_info &lt;- chimp_info[,1:11]
+
+
+chimp_info$ID &lt;- seq.int(nrow(chimp_info))
+
+## 50% of the sample size
+smp_size &lt;- floor(0.50 * nrow(chimp_info))
+
+make_batches &lt;- sample(seq_len(nrow(chimp_info)), size = smp_size)
+
+chimp_info$ID &lt;- chimp_info$ID %in% make_batches
+
+chimp_info$ID[chimp_info$ID == &quot;TRUE&quot;] &lt;- &quot;1&quot;
+chimp_info$ID[chimp_info$ID == &quot;FALSE&quot;] &lt;- &quot;2&quot;
+
+age_plot &lt;- ggplot(chimp_info, aes(x = Age)) + facet_wrap(~chimp_info$ID) + geom_bar() + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Age of chimps&quot;)
+
+plot_grid(age_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>birth_plot &lt;- ggplot(chimp_info, aes(x = Yeart.of.death))  + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Year of death&quot;) +  ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Year of death (proxy for length of tissue storage)&quot;)
+
+plot_grid(birth_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>postmortem_plot &lt;- ggplot(chimp_info, aes(x = Hours.postmortem)) + facet_wrap(~chimp_info$ID)  +geom_bar() + xlab(&quot;Postmortem tissue collection (hours)&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;When tissues were collected postmortem&quot;)
+
+plot_grid(postmortem_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>location_plot &lt;- ggplot(chimp_info, aes(x = Site)) + facet_wrap(~chimp_info$ID)+geom_bar() + xlab(&quot;Location of chimps&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Site location&quot;)
+
+plot_grid(location_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-10.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sex_plot &lt;- ggplot(chimp_info, aes(x = Sex)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Disease status&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Disease status&quot;)
+
+plot_grid(sex_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-11.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>disease_plot &lt;- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Disease status&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Disease status&quot;) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(disease_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-3-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="visualize-the-two-batches" class="section level1">
+<h1>Visualize the two batches</h1>
+<pre class="r"><code># Manually change sample 13 from batch 2 to 1 (to spread out the HCV+)
+
+chimp_info$ID[13] &lt;- &quot;1&quot;
+
+# Manually change sample 9 from batch 1 to 2 (to spread out the HBV+)
+
+chimp_info$ID[11] &lt;- &quot;2&quot;
+
+# If insistent on sample # of males and females 
+chimp_info$ID[6] &lt;- &quot;1&quot;
+chimp_info$ID[17] &lt;- &quot;1&quot;
+
+age_plot &lt;- ggplot(chimp_info, aes(x = Age)) + facet_wrap(~chimp_info$ID) + geom_bar() + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Age of chimps&quot;)
+
+plot_grid(age_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>birth_plot &lt;- ggplot(chimp_info, aes(x = Yeart.of.death))  + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Year of death&quot;) +  ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Year of death (proxy for length of tissue storage)&quot;)
+
+plot_grid(birth_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>postmortem_plot &lt;- ggplot(chimp_info, aes(x = Hours.postmortem)) + facet_wrap(~chimp_info$ID)  +geom_bar() + xlab(&quot;Postmortem tissue collection (hours)&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;When tissues were collected postmortem&quot;)
+
+plot_grid(postmortem_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>location_plot &lt;- ggplot(chimp_info, aes(x = Site)) + facet_wrap(~chimp_info$ID)+geom_bar() + xlab(&quot;Location of chimps&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Site location&quot;) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(location_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sex_plot &lt;- ggplot(chimp_info, aes(x = Sex)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Sex&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Sex&quot;)
+
+plot_grid(sex_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-4-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>disease_plot &lt;- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info$ID) +geom_bar() + xlab(&quot;Disease status&quot;) + ylab(&quot;Number of chimps&quot;)+ggtitle(&quot;Disease status&quot;) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(disease_plot)</code></pre>
+<p><img src="figure/make_batches.Rmd/unnamed-chunk-4-6.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<!-- Insert the session information into the document -->
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.4.3 (2017-11-30)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: OS X El Capitan 10.11.6
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] rsample_0.0.2 tidyr_0.7.2   broom_0.4.3   cowplot_0.9.2 ggplot2_2.2.1
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_0.2.3  purrr_0.2.4       reshape2_1.4.3   
+ [4] kernlab_0.9-25    splines_3.4.3     lattice_0.20-35  
+ [7] colorspace_1.3-2  htmltools_0.3.6   yaml_2.1.18      
+[10] prodlim_1.6.1     survival_2.41-3   rlang_0.1.6      
+[13] pillar_1.1.0      foreign_0.8-69    glue_1.2.0       
+[16] bindrcpp_0.2      bindr_0.1         plyr_1.8.4       
+[19] lava_1.6          dimRed_0.1.0      robustbase_0.92-8
+[22] stringr_1.3.0     timeDate_3043.102 munsell_0.4.3    
+[25] gtable_0.2.0      recipes_0.1.2     psych_1.7.8      
+[28] evaluate_0.10.1   labeling_0.3      knitr_1.20       
+[31] parallel_3.4.3    class_7.3-14      DEoptimR_1.0-8   
+[34] Rcpp_0.12.15      scales_0.5.0      backports_1.1.2  
+[37] ipred_0.9-6       CVST_0.2-1        mnormt_1.5-5     
+[40] digest_0.6.15     stringi_1.1.7     dplyr_0.7.4      
+[43] RcppRoll_0.2.2    ddalpha_1.3.1.1   grid_3.4.3       
+[46] rprojroot_1.3-2   tools_3.4.3       magrittr_1.5     
+[49] lazyeval_0.2.1    tibble_1.4.2      DRR_0.0.3        
+[52] pkgconfig_2.0.1   MASS_7.3-48       Matrix_1.2-13    
+[55] lubridate_1.7.1   gower_0.1.2       assertthat_0.2.0 
+[58] rmarkdown_1.9     rpart_4.1-12      R6_2.2.2         
+[61] nnet_7.3-12       sfsmisc_1.1-2     nlme_3.1-131     
+[64] git2r_0.21.0      compiler_3.4.3   </code></pre>
+</div>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+    This <a href="http://rmarkdown.rstudio.com">R Markdown</a> site was created with <a href="https://github.com/jdblischak/workflowr">workflowr</a>
+</p>
+<hr>
+
+<!-- To enable disqus, uncomment the section below and provide your disqus_shortname -->
+
+<!-- disqus
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'rmarkdown'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+-->
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
