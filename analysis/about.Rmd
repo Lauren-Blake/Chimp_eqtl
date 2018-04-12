@@ -5,4 +5,4 @@ output:
     toc: false
 ---
 
-Describe your project.
+Broadly, we are interested in primate regulatory evolution. The goal of this project is to identify chimpanzee eQTLs and compare these to human eQTLs. 
