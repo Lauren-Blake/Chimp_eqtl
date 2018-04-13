@@ -254,6 +254,87 @@ disease_plot <- ggplot(chimp_info, aes(x = Precaution)) + facet_wrap(~chimp_info
 plot_grid(disease_plot)
 ```
 
+# Print extraction batch info
+
+```{r}
+chimp_info$ID
+```
+
+# Assign adaptors 
+
+We have 12 adaptors for 17 samples: adaptors 2, 10, 11, 14, 18, 19, 20, 21, 22, 23, 25, 27.
+
+```{r}
+adaptor_number <- c(2, 10, 11, 14, 18, 19, 20, 21, 22, 23, 25, 27)
+
+for (i in 1:10){
+set.seed(i)
+sample_order <- sample(seq_len(length(adaptor_number)), size = length(adaptor_number))
+print(sample_order)
+}
+
+for (i in 1:10){
+set.seed(i)
+sample_order <- sample(seq_len(length(adaptor_number)), size = nrow(chimp_info)-length(adaptor_number))
+print(sample_order)
+}
+
+make_order <- c(4, 5, 6, 9, 2, 7, 10, 12, 3, 1, 11, 8, 3, 8, 6, 2, 11)
+
+for (i in 1:nrow(chimp_info)){
+  chimp_info$adaptor[i] <- adaptor_number[make_order[i]]
+}
+
+adaptor_plot <- ggplot(chimp_info, aes(x = adaptor)) +geom_bar() + xlab("Adaptor number") + ylab("Number of chimps")+ggtitle("Distribution of adaptors")
+
+plot_grid(adaptor_plot)
+```
+
+# What's the relationship between extraction batch and adaptor?
+
+```{r}
+batch_plot <- ggplot(chimp_info, aes(x = ID, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Extraction batch")+xlab("Extraction batch")
+
+plot_grid(batch_plot)
+
+```
+
+## Relationship between adaptor and other covariates
+```{r}
+batch_sex_plot <- ggplot(chimp_info, aes(x = Sex, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Sex")+xlab("Sex")
+
+plot_grid(batch_sex_plot)
+
+batch_disease_plot <- ggplot(chimp_info, aes(x = Precaution, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Disease")+xlab("Disease") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(batch_disease_plot)
+
+batch_location_plot <- ggplot(chimp_info, aes(x = Site, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Site")+xlab("Site") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(batch_location_plot)
+
+batch_death_plot <- ggplot(chimp_info, aes(x = Hours.postmortem, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Hours postmortem")+xlab("Hours") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(batch_death_plot)
+
+batch_collection_plot <- ggplot(chimp_info, aes(x = Yeart.of.death, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Death Year")+xlab("Year of Death") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(batch_collection_plot)
+
+batch_collection_plot <- ggplot(chimp_info, aes(x = Age, y = adaptor))  + geom_boxplot() + geom_jitter(width = 0.06, height = 0) + ylab("Adaptor number")+ggtitle("Adaptor v. Age")+xlab("Age") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot_grid(batch_collection_plot)
+
+```
+
+```{r}
+as.data.frame(cbind(chimp_info$Sample, chimp_info$Sample.Name, chimp_info$adaptor), stringsAsFactors = FALSE)
+```
+
+
+
+
+
 
 
 
