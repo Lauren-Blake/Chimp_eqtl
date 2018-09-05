@@ -1,0 +1,41 @@
+---
+title: "RIN_scores"
+author: "Lauren Blake"
+date: "2018-09-05"
+output: workflowr::wflow_html
+---
+
+## Introduction
+
+This script is to evaluate the RIN scores of the chimpanzee hearts.
+
+```{r}
+# Library
+library("ggplot2")
+library("cowplot")
+
+# Obtain RIN scores
+
+RIN_score <- read.csv("../data/RIN_score.csv")
+
+# Remove missing ones
+
+missing_RIN <- c(10,19)
+RIN_score <- RIN_score[-missing_RIN,]
+
+dim(RIN_score)
+
+# How many are above 4?
+
+summary(RIN_score$Max_RIN > 4)
+summary(RIN_score$Max_RIN > 3.5)
+summary(RIN_score$Max_RIN > 3)
+```
+
+# Plot max. RIN score
+
+```{r}
+ggplot(RIN_score, aes(as.factor(Extraction_batch), Max_RIN)) + geom_boxplot(outlier.size = -1) + geom_jitter(width = 0.2) +  xlab("Extraction batch") + ylab("Max. RIN") + scale_x_discrete(breaks=c("1","2","3", "4"),
+        labels=c("BJP", "CC 1", "CC 2_1", "CC 2_2"))
+```
+
