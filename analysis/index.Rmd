@@ -8,3 +8,5 @@ output:
 Welcome to my chimpanzee heart eQTL research website.
 
 To see how we assigned each sample into processing batches, go [here](https://lauren-blake.github.io/Chimp_eqtl/make_batches.html).
+
+To see the RIN scores of the samples, click [here](https://lauren-blake.github.io/Chimp_eqtl/RIN_scores.html).
